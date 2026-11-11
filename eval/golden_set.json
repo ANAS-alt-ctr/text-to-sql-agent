@@ -1,0 +1,599 @@
+{
+  "description": "Hand-written questions with gold SQL and expected results, split by difficulty. 'expected_rows' was computed by running the gold SQL against data/sample.db (scripts/make_sample_db.py, seed 42) -- never hand-edited. Ambiguous items expect a clarification, not a result.",
+  "name": "Text-to-SQL golden set (sample DB)",
+  "questions": [
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          40
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT COUNT(*) FROM orders",
+      "id": "s01",
+      "question": "How many orders are there in total?"
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          30
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT COUNT(*) FROM customers",
+      "id": "s02",
+      "question": "How many customers do we have?"
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          "canceled"
+        ],
+        [
+          "delivered"
+        ],
+        [
+          "invoiced"
+        ],
+        [
+          "processing"
+        ],
+        [
+          "shipped"
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT DISTINCT order_status FROM orders ORDER BY order_status",
+      "id": "s03",
+      "question": "List the distinct order statuses."
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          4.25
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT AVG(review_score) FROM order_reviews",
+      "id": "s04",
+      "question": "What is the average review score?"
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          3
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled'",
+      "id": "s05",
+      "question": "How many orders were canceled?"
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          "BA",
+          3
+        ],
+        [
+          "CE",
+          3
+        ],
+        [
+          "GO",
+          3
+        ],
+        [
+          "MG",
+          3
+        ],
+        [
+          "PE",
+          3
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT customer_state, COUNT(*) AS n FROM customers GROUP BY customer_state ORDER BY n DESC, customer_state ASC LIMIT 5",
+      "id": "s06",
+      "question": "List the top 5 states by number of customers."
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          15
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT COUNT(*) FROM products",
+      "id": "s07",
+      "question": "How many products are in the catalog?"
+    },
+    {
+      "difficulty": "single-table",
+      "expected_rows": [
+        [
+          969.27
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT MAX(price) FROM order_items",
+      "id": "s08",
+      "question": "What is the highest item price?"
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          "informatica_acessorios",
+          10
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT p.product_category_name, COUNT(*) AS n FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY n DESC LIMIT 1",
+      "id": "j01",
+      "question": "Which product category has the most orders?"
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          "o001",
+          "Sao Paulo"
+        ],
+        [
+          "o002",
+          "Sao Paulo"
+        ],
+        [
+          "o003",
+          "Porto Alegre"
+        ],
+        [
+          "o004",
+          "Belo Horizonte"
+        ],
+        [
+          "o005",
+          "Salvador"
+        ],
+        [
+          "o006",
+          "Sao Paulo"
+        ],
+        [
+          "o007",
+          "Belo Horizonte"
+        ],
+        [
+          "o008",
+          "Sao Paulo"
+        ],
+        [
+          "o009",
+          "Sao Paulo"
+        ],
+        [
+          "o010",
+          "Belo Horizonte"
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT o.order_id, c.customer_city FROM orders o JOIN customers c ON o.customer_id = c.customer_id ORDER BY o.order_id LIMIT 10",
+      "id": "j02",
+      "question": "List the first 10 orders with their customer city."
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          "s001",
+          "Sao Paulo"
+        ],
+        [
+          "s002",
+          "Rio de Janeiro"
+        ],
+        [
+          "s003",
+          "Belo Horizonte"
+        ],
+        [
+          "s004",
+          "Porto Alegre"
+        ],
+        [
+          "s005",
+          "Curitiba"
+        ],
+        [
+          "s006",
+          "Salvador"
+        ],
+        [
+          "s007",
+          "Florianopolis"
+        ],
+        [
+          "s008",
+          "Recife"
+        ],
+        [
+          "s009",
+          "Goiania"
+        ],
+        [
+          "s010",
+          "Fortaleza"
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT DISTINCT s.seller_id, s.seller_city FROM sellers s JOIN order_items oi ON s.seller_id = oi.seller_id JOIN orders o ON oi.order_id = o.order_id WHERE o.order_status = 'delivered' ORDER BY s.seller_id",
+      "id": "j03",
+      "question": "Which sellers sold items in delivered orders?"
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          4.0
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT AVG(r.review_score) FROM order_reviews r JOIN orders o ON r.order_id = o.order_id JOIN customers c ON o.customer_id = c.customer_id WHERE c.customer_state = 'SP'",
+      "id": "j04",
+      "question": "What is the average review score for orders from customers in SP?"
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          969.27,
+          "telefonia"
+        ],
+        [
+          945.05,
+          "telefonia"
+        ],
+        [
+          936.22,
+          "telefonia"
+        ],
+        [
+          892.2,
+          "telefonia"
+        ],
+        [
+          890.57,
+          "telefonia"
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT oi.price, p.product_category_name FROM order_items oi JOIN products p ON oi.product_id = p.product_id ORDER BY oi.price DESC LIMIT 5",
+      "id": "j05",
+      "question": "List the 5 most expensive items with their product category."
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          "c001",
+          4
+        ],
+        [
+          "c008",
+          3
+        ],
+        [
+          "c021",
+          3
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT c.customer_id, COUNT(*) AS n FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_id ORDER BY n DESC, c.customer_id ASC LIMIT 3",
+      "id": "j06",
+      "question": "Which 3 customers placed the most orders?"
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          "credit_card",
+          10769.45
+        ],
+        [
+          "boleto",
+          2751.14
+        ],
+        [
+          "debit_card",
+          2128.04
+        ],
+        [
+          "voucher",
+          1794.17
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT payment_type, SUM(payment_value) AS total FROM order_payments GROUP BY payment_type ORDER BY total DESC",
+      "id": "j07",
+      "question": "What is the total payment value per payment type?"
+    },
+    {
+      "difficulty": "join",
+      "expected_rows": [
+        [
+          "Belo Horizonte"
+        ],
+        [
+          "Curitiba"
+        ],
+        [
+          "Florianopolis"
+        ],
+        [
+          "Fortaleza"
+        ],
+        [
+          "Goiania"
+        ],
+        [
+          "Porto Alegre"
+        ],
+        [
+          "Recife"
+        ],
+        [
+          "Rio de Janeiro"
+        ],
+        [
+          "Salvador"
+        ],
+        [
+          "Sao Paulo"
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT DISTINCT c.customer_city FROM customers c JOIN orders o ON c.customer_id = o.customer_id WHERE o.order_status = 'delivered' ORDER BY c.customer_city",
+      "id": "j08",
+      "question": "Which cities have customers who placed delivered orders?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          17649.78
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT SUM(price) FROM order_items",
+      "id": "a01",
+      "question": "What is our total revenue?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          "telefonia",
+          8049.63
+        ],
+        [
+          "moveis_decoracao",
+          3084.17
+        ],
+        [
+          "esporte_lazer",
+          1504.16
+        ],
+        [
+          "informatica_acessorios",
+          1320.28
+        ],
+        [
+          "cama_mesa_banho",
+          1044.83
+        ],
+        [
+          "ferramentas_jardim",
+          843.14
+        ],
+        [
+          "automotivo",
+          781.74
+        ],
+        [
+          "brinquedos",
+          563.97
+        ],
+        [
+          "beleza_saude",
+          293.51
+        ],
+        [
+          "utilidades_domesticas",
+          164.35
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT p.product_category_name, SUM(oi.price) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY revenue DESC",
+      "id": "a02",
+      "question": "What is the total revenue by product category?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          481.95200000000006
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT AVG(order_total) FROM (SELECT order_id, SUM(price + freight_value) AS order_total FROM order_items GROUP BY order_id)",
+      "id": "a03",
+      "question": "What is the average order value?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          11
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT COUNT(*) FROM orders WHERE order_delivered_customer_date > order_estimated_delivery_date",
+      "id": "a04",
+      "question": "How many late deliveries were there?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          14.15625
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT AVG(julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp)) FROM orders WHERE order_delivered_customer_date IS NOT NULL",
+      "id": "a05",
+      "question": "What is the average delivery time in days?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          "2017-03",
+          1335.94
+        ],
+        [
+          "2017-04",
+          1993.21
+        ],
+        [
+          "2017-05",
+          1453.05
+        ],
+        [
+          "2017-07",
+          1035.84
+        ],
+        [
+          "2017-08",
+          1010.8100000000001
+        ],
+        [
+          "2017-09",
+          1687.27
+        ],
+        [
+          "2017-10",
+          1406.91
+        ],
+        [
+          "2017-11",
+          1069.24
+        ],
+        [
+          "2017-12",
+          715.16
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT strftime('%Y-%m', o.order_purchase_timestamp) AS month, SUM(oi.price) AS revenue FROM orders o JOIN order_items oi ON o.order_id = oi.order_id WHERE strftime('%Y', o.order_purchase_timestamp) = '2017' GROUP BY month ORDER BY month",
+      "id": "a06",
+      "question": "What is the revenue per month in 2017?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          "SP",
+          3174.05
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT c.customer_state, SUM(oi.price) AS revenue FROM order_items oi JOIN orders o ON oi.order_id = o.order_id JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_state ORDER BY revenue DESC LIMIT 1",
+      "id": "a07",
+      "question": "Which state has the highest total revenue?"
+    },
+    {
+      "difficulty": "aggregation",
+      "expected_rows": [
+        [
+          21.425
+        ]
+      ],
+      "expects": "result",
+      "gold_sql": "SELECT AVG(freight_value) FROM order_items",
+      "id": "a08",
+      "question": "What is the average freight value?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x01",
+      "question": "What is our profit?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x02",
+      "question": "What is the profit margin?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x03",
+      "question": "How many customers churned last year?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x04",
+      "question": "How are we doing?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x05",
+      "question": "Show me the best sellers."
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x06",
+      "question": "Which products are popular?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x07",
+      "question": "What is our customer retention rate?"
+    },
+    {
+      "difficulty": "ambiguous",
+      "expected_rows": null,
+      "expects": "clarification",
+      "gold_sql": null,
+      "id": "x08",
+      "question": "What is the ROI of our marketing?"
+    }
+  ]
+}
