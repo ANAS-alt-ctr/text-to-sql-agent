@@ -15,6 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import random
 import sqlite3
 from datetime import datetime, timedelta
@@ -147,6 +148,9 @@ def _fmt(dt: datetime | None) -> str | None:
 
 def build_sample_db(path: str) -> dict[str, int]:
     rng = random.Random(42)
+    # sqlite3 cannot create the file if the parent folder does not exist yet
+    # (fresh clone has no data/ folder), so create it first.
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     conn = sqlite3.connect(path)
     try:
         conn.executescript(SCHEMA_SQL)
