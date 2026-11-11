@@ -1,0 +1,24 @@
+# Core runtime
+fastapi>=0.110
+uvicorn[standard]>=0.29
+sqlalchemy>=2.0
+httpx>=0.27
+sqlparse>=0.5
+pandas>=2.2
+python-dotenv>=1.0
+
+# Agent orchestration (LangGraph state graph; the pipeline falls back to a
+# sequential runner if LangGraph is not installed, see pipeline.py)
+langgraph>=0.2
+
+# Streamlit UI
+streamlit>=1.35
+
+# Optional: Postgres support (SQLite is the default and needs nothing extra)
+psycopg2-binary>=2.9
+
+# Optional: only needed by scripts/load_olist.py (Kaggle download)
+kaggle>=1.6
+
+# Tests
+pytest>=8.0
