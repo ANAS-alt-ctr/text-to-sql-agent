@@ -16,7 +16,7 @@ variables**; no key is ever stored in code.
 ## Quick start
 
 ```bash
-git clone <your-repo> text-to-sql-agent   # or copy this folder
+git clone https://github.com/ANAS-alt-ctr/text-to-sql-agent.git   # or copy this folder
 cd text-to-sql-agent
 python -m venv .venv
 .venv\Scripts\activate        # Windows; on macOS/Linux: source .venv/bin/activate
