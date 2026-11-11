@@ -30,7 +30,7 @@ SQLite is built into Python.
 cd C:\Users\anasr\path\to\text-to-sql-agent
 
 # Otherwise clone your repo:
-git clone <your-repo-url> text-to-sql-agent
+git clone https://github.com/ANAS-alt-ctr/text-to-sql-agent.git
 cd text-to-sql-agent
 ```
 
