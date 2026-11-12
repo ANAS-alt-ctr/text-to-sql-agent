@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-and-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build the sample database
+        run: python scripts/make_sample_db.py --out data/sample.db
+
+      - name: Run unit tests + mock-LLM smoke test
+        run: python -m pytest -q
+
+      - name: Run the golden-set eval (mock LLM, no API key)
+        run: python scripts/run_eval.py --llm mock --db data/sample.db --out eval/results.json
+
+      - name: Upload eval results
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: eval/results.json
